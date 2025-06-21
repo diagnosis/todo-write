@@ -106,20 +106,19 @@ export default function CardView({ index, todo }) {
                     </div>
                 </div>
 
-                {/* Toggle Completion Button */}
+                {/* Toggle Completion Button - Original Filled Style */}
                 <div className="mt-4">
                     <button
                         onClick={handleToggleCompletion}
                         disabled={toggleCompletionMutation.isPending}
-                        className="w-full flex items-center justify-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:shadow-md disabled:opacity-50 border-2"
+                        className="w-full flex items-center justify-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium text-white transition-all duration-200 hover:shadow-md disabled:opacity-50"
                         style={{ 
-                            borderColor: todo.completed ? '#75e6da' : '#189ab4',
-                            color: todo.completed ? '#75e6da' : '#189ab4',
-                            backgroundColor: 'transparent'
+                            backgroundColor: todo.completed ? '#75e6da' : '#189ab4',
+                            color: todo.completed ? '#05445e' : 'white'
                         }}
                     >
                         {toggleCompletionMutation.isPending ? (
-                            <div className="animate-spin rounded-full h-4 w-4 border border-current border-t-transparent"></div>
+                            <div className="animate-spin rounded-full h-4 w-4 border border-white border-t-transparent"></div>
                         ) : (
                             <>
                                 {todo.completed ? <Circle className="w-4 h-4" /> : <CheckCircle className="w-4 h-4" />}
