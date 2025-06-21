@@ -1,4 +1,4 @@
-import { Pencil, Trash2, Clock, Tag } from "lucide-react";
+import { Pencil, Trash2, Clock, Tag, CheckCircle, Circle } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { TodoService } from "../webservices/TodoServices.js";
 import { useNavigate } from "@tanstack/react-router";
@@ -121,7 +121,7 @@ export default function ListView({ todo, index }) {
                         <button
                             onClick={handleToggleCompletion}
                             disabled={toggleCompletionMutation.isPending}
-                            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 hover:shadow-md disabled:opacity-50 ${
+                            className={`flex items-center space-x-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 hover:shadow-md disabled:opacity-50 ${
                                 todo.completed 
                                     ? 'text-white' 
                                     : 'text-white'
@@ -134,7 +134,10 @@ export default function ListView({ todo, index }) {
                             {toggleCompletionMutation.isPending ? (
                                 <div className="animate-spin rounded-full h-3 w-3 border border-current border-t-transparent"></div>
                             ) : (
-                                todo.completed ? 'Mark Pending' : 'Mark Complete'
+                                <>
+                                    {todo.completed ? <Circle className="w-4 h-4" /> : <CheckCircle className="w-4 h-4" />}
+                                    <span>{todo.completed ? 'Mark Pending' : 'Mark Complete'}</span>
+                                </>
                             )}
                         </button>
 
@@ -223,7 +226,7 @@ export default function ListView({ todo, index }) {
                         <button
                             onClick={handleToggleCompletion}
                             disabled={toggleCompletionMutation.isPending}
-                            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:shadow-md disabled:opacity-50 ${
+                            className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:shadow-md disabled:opacity-50 ${
                                 todo.completed 
                                     ? 'text-white' 
                                     : 'text-white'
@@ -236,7 +239,10 @@ export default function ListView({ todo, index }) {
                             {toggleCompletionMutation.isPending ? (
                                 <div className="animate-spin rounded-full h-4 w-4 border border-current border-t-transparent"></div>
                             ) : (
-                                todo.completed ? 'Mark Pending' : 'Mark Complete'
+                                <>
+                                    {todo.completed ? <Circle className="w-4 h-4" /> : <CheckCircle className="w-4 h-4" />}
+                                    <span>{todo.completed ? 'Mark Pending' : 'Mark Complete'}</span>
+                                </>
                             )}
                         </button>
 
