@@ -66,7 +66,7 @@ export default function ListView({ todo, index }) {
             <div className="p-4 sm:p-6">
                 {/* Mobile Layout */}
                 <div className="block sm:hidden space-y-3">
-                    {/* Task Number and Status */}
+                    {/* Task Number and Status Badge */}
                     <div className="flex items-center justify-between">
                         <div 
                             className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold"
@@ -74,12 +74,9 @@ export default function ListView({ todo, index }) {
                         >
                             {index + 1}
                         </div>
+                        {/* Status Badge - Read Only */}
                         <span 
-                            className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
-                                todo.completed 
-                                    ? 'text-white' 
-                                    : 'text-white'
-                            }`}
+                            className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium"
                             style={{ 
                                 backgroundColor: todo.completed ? '#75e6da' : '#189ab4',
                                 color: todo.completed ? '#05445e' : 'white'
@@ -117,18 +114,16 @@ export default function ListView({ todo, index }) {
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="flex justify-between items-center pt-2">
+                    <div className="flex justify-between items-center pt-2 border-t border-gray-100">
+                        {/* Toggle Completion Button */}
                         <button
                             onClick={handleToggleCompletion}
                             disabled={toggleCompletionMutation.isPending}
-                            className={`flex items-center space-x-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 hover:shadow-md disabled:opacity-50 ${
-                                todo.completed 
-                                    ? 'text-white' 
-                                    : 'text-white'
-                            }`}
+                            className="flex items-center space-x-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 hover:shadow-md disabled:opacity-50 border-2"
                             style={{ 
-                                backgroundColor: todo.completed ? '#75e6da' : '#189ab4',
-                                color: todo.completed ? '#05445e' : 'white'
+                                borderColor: todo.completed ? '#75e6da' : '#189ab4',
+                                color: todo.completed ? '#75e6da' : '#189ab4',
+                                backgroundColor: 'transparent'
                             }}
                         >
                             {toggleCompletionMutation.isPending ? (
@@ -141,6 +136,7 @@ export default function ListView({ todo, index }) {
                             )}
                         </button>
 
+                        {/* Edit & Delete Buttons */}
                         <div className="flex space-x-2">
                             <button 
                                 onClick={handleEdit}
@@ -184,12 +180,9 @@ export default function ListView({ todo, index }) {
                                 <h3 className="text-lg font-semibold" style={{ color: '#05445e' }}>
                                     {todo.title}
                                 </h3>
+                                {/* Status Badge - Read Only */}
                                 <span 
-                                    className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
-                                        todo.completed 
-                                            ? 'text-white' 
-                                            : 'text-white'
-                                    }`}
+                                    className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium"
                                     style={{ 
                                         backgroundColor: todo.completed ? '#75e6da' : '#189ab4',
                                         color: todo.completed ? '#05445e' : 'white'
@@ -222,18 +215,15 @@ export default function ListView({ todo, index }) {
 
                     {/* Right Section - Actions */}
                     <div className="flex items-center space-x-3">
-                        {/* Completion Toggle Button */}
+                        {/* Toggle Completion Button */}
                         <button
                             onClick={handleToggleCompletion}
                             disabled={toggleCompletionMutation.isPending}
-                            className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:shadow-md disabled:opacity-50 ${
-                                todo.completed 
-                                    ? 'text-white' 
-                                    : 'text-white'
-                            }`}
+                            className="flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:shadow-md disabled:opacity-50 border-2"
                             style={{ 
-                                backgroundColor: todo.completed ? '#75e6da' : '#189ab4',
-                                color: todo.completed ? '#05445e' : 'white'
+                                borderColor: todo.completed ? '#75e6da' : '#189ab4',
+                                color: todo.completed ? '#75e6da' : '#189ab4',
+                                backgroundColor: 'transparent'
                             }}
                         >
                             {toggleCompletionMutation.isPending ? (
@@ -246,7 +236,7 @@ export default function ListView({ todo, index }) {
                             )}
                         </button>
 
-                        {/* Action Buttons */}
+                        {/* Edit & Delete Buttons */}
                         <div className="flex space-x-2">
                             <button 
                                 onClick={handleEdit}
