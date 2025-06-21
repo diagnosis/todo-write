@@ -23,7 +23,7 @@ export default function CardView({ index, todo }) {
 
     // Toggle completion mutation
     const toggleCompletionMutation = useMutation({
-        mutationFn: ({ id, completed }) => TodoService.updateTodo(id, { completed }),
+        mutationFn: ({ id, todoData }) => TodoService.updateTodo(id, todoData),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['todos'] });
         },
@@ -43,9 +43,17 @@ export default function CardView({ index, todo }) {
     };
 
     const handleToggleCompletion = () => {
+        const updatedTodo = {
+            ...todo,
+            completed: !todo.completed,
+            created_at: todo.created_at instanceof Date ? todo.created_at.toISOString() : todo.created_at,
+            updated_at: new Date().toISOString(),
+            due_date: todo.due_date instanceof Date ? todo.due_date.toISOString() : todo.due_date
+        };
+
         toggleCompletionMutation.mutate({
             id: todo.id,
-            completed: !todo.completed
+            todoData: updatedTodo
         });
     };
 
