@@ -1,4 +1,4 @@
-import { Pencil, Trash2, Clock, Tag } from "lucide-react";
+import { Pencil, Trash2, Clock, Tag, CheckCircle, Circle } from "lucide-react";
 import useGetRemainingTime from "../customhooks/useGetRemainingTime.js";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { TodoService } from "../webservices/TodoServices.js";
@@ -73,26 +73,17 @@ export default function CardView({ index, todo }) {
                     </span>
                 </div>
 
-                {/* Status Badge */}
+                {/* Status Badge - Read Only */}
                 <div className="flex items-center space-x-2 mb-4">
-                    <button
-                        onClick={handleToggleCompletion}
-                        disabled={toggleCompletionMutation.isPending}
-                        className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium transition-all duration-200 hover:shadow-md disabled:opacity-50 ${
-                            todo.completed 
-                                ? 'text-white' 
-                                : 'text-white'
-                        }`}
+                    <span
+                        className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium"
                         style={{ 
                             backgroundColor: todo.completed ? '#75e6da' : '#189ab4',
                             color: todo.completed ? '#05445e' : 'white'
                         }}
                     >
-                        {toggleCompletionMutation.isPending ? (
-                            <div className="animate-spin rounded-full h-3 w-3 border border-current border-t-transparent mr-1"></div>
-                        ) : null}
                         {todo.completed ? "✓ Completed" : "⏳ Pending"}
-                    </button>
+                    </span>
                 </div>
 
                 {/* Task Details */}
@@ -113,6 +104,29 @@ export default function CardView({ index, todo }) {
                             {isOverdue ? "⚠️ Overdue" : `⏰ ${timeRemaining.remainingTime} left`}
                         </span>
                     </div>
+                </div>
+
+                {/* Toggle Completion Button */}
+                <div className="mt-4">
+                    <button
+                        onClick={handleToggleCompletion}
+                        disabled={toggleCompletionMutation.isPending}
+                        className="w-full flex items-center justify-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:shadow-md disabled:opacity-50 border-2"
+                        style={{ 
+                            borderColor: todo.completed ? '#75e6da' : '#189ab4',
+                            color: todo.completed ? '#75e6da' : '#189ab4',
+                            backgroundColor: 'transparent'
+                        }}
+                    >
+                        {toggleCompletionMutation.isPending ? (
+                            <div className="animate-spin rounded-full h-4 w-4 border border-current border-t-transparent"></div>
+                        ) : (
+                            <>
+                                {todo.completed ? <Circle className="w-4 h-4" /> : <CheckCircle className="w-4 h-4" />}
+                                <span>{todo.completed ? 'Mark Pending' : 'Mark Complete'}</span>
+                            </>
+                        )}
+                    </button>
                 </div>
             </div>
 
