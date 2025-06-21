@@ -38,7 +38,7 @@ function CreateTaskPage() {
       const taskData = {
         title: value.title,
         description: value.description,
-        due_date: value.due_date,
+        due_date: new Date(value.due_date).toISOString(),
         groupName: value.groupName,
         completed: false
       }
