@@ -259,16 +259,6 @@ function CreateTaskPage() {
             )}
           </form>
         </div>
-
-        {/* Form Debug Info (Development only) */}
-        {process.env.NODE_ENV === 'development' && (
-          <div className="mt-8 p-4 bg-gray-100 rounded-lg">
-            <h3 className="font-semibold mb-2">Form State (Debug)</h3>
-            <pre className="text-xs overflow-auto">
-              {JSON.stringify(form.state, null, 2)}
-            </pre>
-          </div>
-        )}
       </div>
     </div>
   )
