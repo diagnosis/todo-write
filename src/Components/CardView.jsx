@@ -1,12 +1,9 @@
 import { Pencil, Trash2, Clock, Tag } from "lucide-react";
+import useGetRemainingTime from "../customhooks/useGetRemainingTime.js";
 
 export default function CardView({ index, todo }) {
-    const now = new Date();
-    const timeDiff = todo.due_date - now;
-    const hours = Math.floor(timeDiff / (1000 * 60 * 60));
-    const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
-    const timeRemaining = `${hours}h ${minutes}m`;
-    const isOverdue = timeDiff < 0;
+    const timeRemaining = useGetRemainingTime(todo.due_date)
+    const isOverdue = timeRemaining.timeDiff < 0;
 
     return (
         <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 border border-gray-100">
@@ -56,7 +53,7 @@ export default function CardView({ index, todo }) {
                     <div className={`flex items-center space-x-2 font-medium ${isOverdue ? 'text-red-500' : 'text-orange-500'}`}>
                         <Clock className="w-4 h-4" />
                         <span>
-                            {isOverdue ? "⚠️ Overdue" : `⏰ ${timeRemaining} left`}
+                            {isOverdue ? "⚠️ Overdue" : `⏰ ${timeRemaining.remainingTime} left`}
                         </span>
                     </div>
                 </div>

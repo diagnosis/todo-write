@@ -11,4 +11,5 @@
         this.due_date = due_date ? new Date(due_date) : new Date();
         this.groupName = groupName || null;
     }
+
     }

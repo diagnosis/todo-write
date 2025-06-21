@@ -1,10 +1,11 @@
-import { createFileRoute } from '@tanstack/react-router';
+import {createFileRoute, createRouter, Link} from '@tanstack/react-router';
 import { TodoService } from "../webservices/TodoServices.js";
 import { useQuery } from "@tanstack/react-query";
 import TodoItem from "../TodoItem.jsx";
 import { useState } from "react";
 import { Grid, List, Plus, Calendar, CheckCircle } from "lucide-react";
 import useListView from "../customhooks/useListView.js";
+import {routeTree} from "../routeTree.gen.js";
 
 export const Route = createFileRoute('/')({
     component: Index,
@@ -33,7 +34,7 @@ function Index() {
         return (
             <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#d4f1f4' }}>
                 <div className="text-center p-8 rounded-lg shadow-lg bg-white">
-                    <p className="text-lg font-medium text-red-600">Error loading tasks: {error.message}</p>
+                    <p className="text-lg font-medium text-red-600">Error loading tasks: {error}</p>
                 </div>
             </div>
         );
@@ -113,14 +114,14 @@ function Index() {
                         </div>
                     </div>
 
-                    <button 
-                        onClick={() => console.log("add button clicked")}
+                    <Link to={'/post'}
+
                         className="flex items-center space-x-2 px-6 py-3 rounded-lg font-semibold text-white transition-all duration-200 hover:shadow-lg hover:scale-105"
                         style={{ backgroundColor: '#189ab4' }}
                     >
                         <Plus className="w-5 h-5" />
                         <span>Add New Task</span>
-                    </button>
+                    </Link>
                 </div>
 
                 {/* Tasks Container */}
