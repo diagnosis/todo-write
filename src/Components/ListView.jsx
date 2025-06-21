@@ -1,4 +1,7 @@
 import { Pencil, Trash2, Clock, Tag, CheckCircle } from "lucide-react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { TodoService } from "../webservices/TodoServices.js";
+import { useNavigate } from "@tanstack/react-router";
 
 export default function ListView({ todo, index }) {
     const now = new Date();
@@ -7,6 +10,47 @@ export default function ListView({ todo, index }) {
     const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
     const timeRemaining = `${hours}h ${minutes}m`;
     const isOverdue = timeDiff < 0;
+    const queryClient = useQueryClient();
+    const navigate = useNavigate();
+
+    // Delete mutation
+    const deleteMutation = useMutation({
+        mutationFn: TodoService.deleteTodo,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['todos'] });
+        },
+        onError: (error) => {
+            console.error('Error deleting task:', error);
+        }
+    });
+
+    // Toggle completion mutation
+    const toggleCompletionMutation = useMutation({
+        mutationFn: ({ id, completed }) => TodoService.updateTodo(id, { completed }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['todos'] });
+        },
+        onError: (error) => {
+            console.error('Error updating task:', error);
+        }
+    });
+
+    const handleDelete = () => {
+        if (window.confirm('Are you sure you want to delete this task?')) {
+            deleteMutation.mutate(todo.id);
+        }
+    };
+
+    const handleEdit = () => {
+        navigate({ to: `/edit/${todo.id}` });
+    };
+
+    const handleToggleCompletion = () => {
+        toggleCompletionMutation.mutate({
+            id: todo.id,
+            completed: !todo.completed
+        });
+    };
 
     return (
         <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 border-l-4 border-opacity-80"
@@ -73,12 +117,18 @@ export default function ListView({ todo, index }) {
                                 type="checkbox" 
                                 checked={todo.completed}
                                 className="sr-only peer"
-                                onChange={() => console.log('Toggle completion')}
+                                onChange={handleToggleCompletion}
+                                disabled={toggleCompletionMutation.isPending}
                             />
                             <div className="relative w-11 h-6 rounded-full peer transition-colors duration-200 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all"
                                  style={{ 
                                      backgroundColor: todo.completed ? '#75e6da' : '#d1d5db'
                                  }}>
+                                {toggleCompletionMutation.isPending && (
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                        <div className="animate-spin rounded-full h-3 w-3 border border-gray-400 border-t-transparent"></div>
+                                    </div>
+                                )}
                             </div>
                             <span className="ml-3 text-sm font-medium" style={{ color: '#05445e' }}>
                                 {todo.completed ? 'Completed' : 'Mark Complete'}
@@ -88,6 +138,7 @@ export default function ListView({ todo, index }) {
                         {/* Action Buttons */}
                         <div className="flex space-x-2">
                             <button 
+                                onClick={handleEdit}
                                 className="p-2 rounded-lg transition-colors duration-200 hover:shadow-md"
                                 style={{ backgroundColor: '#75e6da', color: '#05445e' }}
                                 title="Edit task"
@@ -95,10 +146,16 @@ export default function ListView({ todo, index }) {
                                 <Pencil className="w-4 h-4" />
                             </button>
                             <button 
-                                className="p-2 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 transition-colors duration-200 hover:shadow-md"
+                                onClick={handleDelete}
+                                disabled={deleteMutation.isPending}
+                                className="p-2 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 transition-colors duration-200 hover:shadow-md disabled:opacity-50"
                                 title="Delete task"
                             >
-                                <Trash2 className="w-4 h-4" />
+                                {deleteMutation.isPending ? (
+                                    <div className="animate-spin rounded-full h-4 w-4 border border-red-600 border-t-transparent"></div>
+                                ) : (
+                                    <Trash2 className="w-4 h-4" />
+                                )}
                             </button>
                         </div>
                     </div>

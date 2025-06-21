@@ -17,8 +17,10 @@ export class TodoService{
         }
         static async deleteTodo(id) {
             const response = await axios.delete(`${API_URL}/todos/${id}`);
+            return response.data;
         }
         static async updateTodo(id, todoData) {
             const response = await axios.put(`${API_URL}/todos/${id}`, todoData);
+            return new Todo(response.data);
         }
     }

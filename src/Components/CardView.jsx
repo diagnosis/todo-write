@@ -1,9 +1,53 @@
 import { Pencil, Trash2, Clock, Tag } from "lucide-react";
 import useGetRemainingTime from "../customhooks/useGetRemainingTime.js";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { TodoService } from "../webservices/TodoServices.js";
+import { useNavigate } from "@tanstack/react-router";
 
 export default function CardView({ index, todo }) {
     const timeRemaining = useGetRemainingTime(todo.due_date)
     const isOverdue = timeRemaining.timeDiff < 0;
+    const queryClient = useQueryClient();
+    const navigate = useNavigate();
+
+    // Delete mutation
+    const deleteMutation = useMutation({
+        mutationFn: TodoService.deleteTodo,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['todos'] });
+        },
+        onError: (error) => {
+            console.error('Error deleting task:', error);
+        }
+    });
+
+    // Toggle completion mutation
+    const toggleCompletionMutation = useMutation({
+        mutationFn: ({ id, completed }) => TodoService.updateTodo(id, { completed }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['todos'] });
+        },
+        onError: (error) => {
+            console.error('Error updating task:', error);
+        }
+    });
+
+    const handleDelete = () => {
+        if (window.confirm('Are you sure you want to delete this task?')) {
+            deleteMutation.mutate(todo.id);
+        }
+    };
+
+    const handleEdit = () => {
+        navigate({ to: `/edit/${todo.id}` });
+    };
+
+    const handleToggleCompletion = () => {
+        toggleCompletionMutation.mutate({
+            id: todo.id,
+            completed: !todo.completed
+        });
+    };
 
     return (
         <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 border border-gray-100">
@@ -23,8 +67,10 @@ export default function CardView({ index, todo }) {
 
                 {/* Status Badge */}
                 <div className="flex items-center space-x-2 mb-4">
-                    <span 
-                        className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
+                    <button
+                        onClick={handleToggleCompletion}
+                        disabled={toggleCompletionMutation.isPending}
+                        className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium transition-all duration-200 hover:shadow-md disabled:opacity-50 ${
                             todo.completed 
                                 ? 'text-white' 
                                 : 'text-white'
@@ -34,8 +80,11 @@ export default function CardView({ index, todo }) {
                             color: todo.completed ? '#05445e' : 'white'
                         }}
                     >
+                        {toggleCompletionMutation.isPending ? (
+                            <div className="animate-spin rounded-full h-3 w-3 border border-current border-t-transparent mr-1"></div>
+                        ) : null}
                         {todo.completed ? "✓ Completed" : "⏳ Pending"}
-                    </span>
+                    </button>
                 </div>
 
                 {/* Task Details */}
@@ -66,6 +115,7 @@ export default function CardView({ index, todo }) {
                 </div>
                 <div className="flex space-x-2">
                     <button 
+                        onClick={handleEdit}
                         className="p-2 rounded-lg transition-colors duration-200 hover:shadow-md"
                         style={{ backgroundColor: '#75e6da', color: '#05445e' }}
                         title="Edit task"
@@ -73,10 +123,16 @@ export default function CardView({ index, todo }) {
                         <Pencil size={16} />
                     </button>
                     <button 
-                        className="p-2 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 transition-colors duration-200 hover:shadow-md"
+                        onClick={handleDelete}
+                        disabled={deleteMutation.isPending}
+                        className="p-2 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 transition-colors duration-200 hover:shadow-md disabled:opacity-50"
                         title="Delete task"
                     >
-                        <Trash2 size={16} />
+                        {deleteMutation.isPending ? (
+                            <div className="animate-spin rounded-full h-4 w-4 border border-red-600 border-t-transparent"></div>
+                        ) : (
+                            <Trash2 size={16} />
+                        )}
                     </button>
                 </div>
             </div>
