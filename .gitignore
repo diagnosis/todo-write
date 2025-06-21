@@ -1,0 +1,11 @@
+# See https://www.toptal.com/developers/gitignore/api/vite
+.env.local
+.env.development.local
+.env.production.local
+.env.test.local
+
+vercel
+dist
+node_modules
+.env
+.idea
